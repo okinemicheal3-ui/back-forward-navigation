@@ -62,11 +62,11 @@ int main() {
                 </style>
             </head>
             <body>
-                <h2> 🌏Mini Browser</h2>
+                <h2>Mini Browser</h2>
                 <div class="browser">
                     <div class="toolbar">
-                        <button onclick="send('/back')"> Back 🔙</button>
-                        <button onclick="send('/forward')">Forward ⏩</button>
+                        <button onclick="send('/back')"> Back</button>
+                        <button onclick="send('/forward')">Forward </button>
                     </div>
                     <div>
                         <input type="text" id="address-bar" placeholder="Enter URL (e.g., google.com)">
