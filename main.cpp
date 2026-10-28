@@ -19,28 +19,21 @@ public:
 
     void visit(const string& url) {
         if (url.empty()) return;
-        // Push current page to back history
         backStack.push(currentPage);
-        // Clear forward history because we made a new action
         while (!forwardStack.empty()) forwardStack.pop();
-        // Set new current page
         currentPage = url;
     }
 
     void goBack() {
-        if (backStack.empty()) return; // Can't go back
-        // Push current page to forward history
+        if (backStack.empty()) return;
         forwardStack.push(currentPage);
-        // Pop the last page from back history and make it current
         currentPage = backStack.top();
         backStack.pop();
     }
 
     void goForward() {
-        if (forwardStack.empty()) return; // Can't go forward
-        // Push current page to back history
+        if (forwardStack.empty()) return;
         backStack.push(currentPage);
-        // Pop the last page from forward history and make it current
         currentPage = forwardStack.top();
         forwardStack.pop();
     }
@@ -48,13 +41,11 @@ public:
     string getCurrentPage() const { return currentPage; }
 };
 
-// Global browser instance
 BrowserHistory browser;
 
 int main() {
     httplib::Server svr;
 
-    // 1. Serve the HTML Frontend (Simulating a Browser)
     svr.Get("/", [](const httplib::Request &, httplib::Response &res) {
         string html = R"HTML(
             <!DOCTYPE html>
@@ -89,7 +80,6 @@ int main() {
                             .then(res => res.text())
                             .then(data => { 
                                 document.getElementById('display').innerText = data; 
-                                // Update address bar to match current page
                                 document.getElementById('address-bar').value = (data === "Home Page") ? "" : data;
                             });
                     }
@@ -100,7 +90,6 @@ int main() {
         res.set_content(html, "text/html");
     });
 
-    // 2. API Endpoints for Stack Operations
     svr.Get("/visit", [](const httplib::Request &req, httplib::Response &res) {
         if (req.has_param("url")) browser.visit(req.get_param_value("url"));
         res.set_content(browser.getCurrentPage(), "text/plain");
